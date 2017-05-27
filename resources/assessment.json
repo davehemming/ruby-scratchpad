@@ -1,0 +1,11 @@
+{
+  "customer": {
+    "firstName": "David",
+    "lastName": "Hemming"
+  },
+  "pets": [
+    "dog",
+    "cat",
+    "bird"
+  ]
+}
