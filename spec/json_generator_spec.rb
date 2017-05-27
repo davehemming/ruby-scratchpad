@@ -22,9 +22,9 @@ RSpec.describe JsonGenerator do
 
       result = json_generator.get_assessment
 
-      expect(result).to include("customer" => {
-          "firstName" => "David",
-          "lastName" => "Hemming"
+      expect(result).to include(customer: {
+          firstName: 'David',
+          lastName: 'Hemming'
       })
 
     end
@@ -35,75 +35,74 @@ RSpec.describe JsonGenerator do
 
     it 'adds a string attribute to an assessment object' do
 
-      modifier = {"customer" => {"age" => 35}}
+      modifier = {customer: {age: 35}}
 
       result = json_generator.modify_assessment(modifier)
 
-      expect(result).to include("customer" => {
-          "firstName" => "David",
-          "lastName" => "Hemming",
-          "age" => 35
+      expect(result).to include(customer: {
+          firstName: 'David',
+          lastName: 'Hemming',
+          age: 35
       })
 
     end
 
     it 'adds a new hash attribute to an assessment object' do
-      modifier = {"location" => {"city" => "Melbourne"}}
+      modifier = {location: {city: 'Melbourne'}}
 
       result = json_generator.modify_assessment modifier
 
       expect(result).to include(
-        "customer" => {
-          "firstName" => "David",
-          "lastName" => "Hemming"
+        customer: {
+          firstName: 'David',
+          lastName: 'Hemming'
         },
-        "location" => {
-            "city" => "Melbourne"
+        location: {
+            city: 'Melbourne'
         })
     end
 
     it 'adds a new value to an array' do
-      modifier = {"pets" => json_generator.get_assessment["pets"].push("frog")}
+      modifier = {pets: json_generator.get_assessment[:pets].push('frog')}
 
       result = json_generator.modify_assessment modifier
 
-      expect(result["pets"]).to include("dog", "cat", "bird", "frog")
+      expect(result[:pets]).to include('dog', 'cat', 'bird', 'frog')
     end
 
     it 'deletes a string attribute from an assement object' do
-      modifier = {"customer" => {"lastName" => :delete}}
+      modifier = {customer: {lastName: :delete}}
 
       result = json_generator.modify_assessment modifier
 
       expect(result).to include({
-          "customer" => {
-              "firstName" => "David"
+          customer: {
+              firstName: 'David'
           }
       })
     end
 
     it 'deletes a hash attribute from an assessment object' do
-      modifier = {"customer" => :delete}
+      modifier = {customer: :delete}
 
       result = json_generator.modify_assessment modifier
 
-      expect(result["customer"]).to be_nil
+      expect(result[:customer]).to be_nil
     end
 
     it 'deletes a value from an array object' do
 
-      pets_array = json_generator.get_assessment["pets"]
-      pets_array.delete_at(pets_array.find_index {|v| v.eql? "dog" })
-      modifier = {"pets" => pets_array}
+      pets_array = json_generator.get_assessment[:pets]
+      pets_array.delete_at(pets_array.find_index {|v| v.eql? 'dog' })
+      modifier = {pets: pets_array}
 
       result = json_generator.modify_assessment modifier
 
-      expect(result["pets"]).to include("cat", "bird")
+      expect(result[:pets]).to include('cat', 'bird')
     end
   end
 
   describe 'json_path_to_hash' do
-    # $.store.book
 
     it 'takes a valid json path and value and returns hash' do
 
@@ -116,12 +115,12 @@ RSpec.describe JsonGenerator do
           {
               path: '$.book',
               value: 'David Hemming\'s Autobiography',
-              expecting: {'book' => 'David Hemming\'s Autobiography'}
+              expecting: {book: 'David Hemming\'s Autobiography'}
           },
           {
               path: '$.store.book',
               value: 'David Hemming\'s Autobiography',
-              expecting: {'store' => {'book' => 'David Hemming\'s Autobiography'}}
+              expecting: {store: {book: 'David Hemming\'s Autobiography'}}
           }
       ]
 

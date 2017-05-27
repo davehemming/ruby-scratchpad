@@ -10,7 +10,7 @@ class JsonGenerator
   def get_assessment
     file = File.read('./resources/assessment.json')
 
-    assessment = JSON.parse(file)
+    assessment = JSON.parse(file, symbolize_names: true)
 
   end
 
@@ -32,13 +32,13 @@ class JsonGenerator
     json_path = json_path.slice(sub_path.length, json_path.length)
 
     if json_path.length == 0
-      hash_val[sub_path] = value
+      hash_val[sub_path.to_sym] = value
       hash_val
     else
       if sub_path.eql? '$.'
         json_path_to_hash(json_path, value, hash_val)
       else
-        hash_val[sub_path.chop] = json_path_to_hash(json_path, value)
+        hash_val[sub_path.chop.to_sym] = json_path_to_hash(json_path, value)
       end
     end
 

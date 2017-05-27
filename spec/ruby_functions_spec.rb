@@ -14,5 +14,9 @@ RSpec.describe 'string' do
       expect('$.'.chop).to eql '$'
 
     end
+
+    it 'performs a symbol conversion' do
+      expect('book'.to_sym).to eql(:book)
+    end
   end
 end
