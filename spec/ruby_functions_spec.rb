@@ -12,6 +12,10 @@ RSpec.describe 'string' do
       expect('book'[/^.*?(\.|$)/]).to eql 'book'
       expect(''[/^.*?(\.|$)/]).to eql ''
       expect('$.'.chop).to eql '$'
+      expect('book[*]'[/^.*?(\.|$)/]).to eql 'book[*]'
+      # expect('book[*].'[/^.*?(\.|$)/]).to eql 'book[*].'
+      expect('book[*]'[/[^\[]*/]).to eql 'book'
+      expect('book[*].'[/[^\[]*/]).to eql 'book'
 
     end
 

@@ -31,14 +31,31 @@ class JsonGenerator
     sub_path = json_path[/^.*?(\.|$)/]
     json_path = json_path.slice(sub_path.length, json_path.length)
 
-    if json_path.length == 0
-      hash_val[sub_path.to_sym] = value
-      hash_val
-    else
-      if sub_path.eql? '$.'
-        json_path_to_hash(json_path, value, hash_val)
+    if json_path.empty?
+      if sub_path.start_with? '$'
+        return hash_val
       else
-        hash_val[sub_path.chop.to_sym] = json_path_to_hash(json_path, value)
+
+        if sub_path.include?('[*]')
+          key = sub_path[/[^\[]*/]
+          hash_val[key.to_sym] = [value]
+        else
+          hash_val[sub_path.to_sym] = value
+        end
+
+        return hash_val
+
+      end
+
+    else
+      if sub_path.start_with? '$'
+        json_path_to_hash(json_path, value, hash_val)
+      elsif sub_path.include?('[*]')
+        key = sub_path[/[^\[]*/]
+        hash_val[key.to_sym] = [json_path_to_hash(json_path, value)]
+      else
+        key = sub_path.end_with?('.') ? sub_path.chop : sub_path
+        hash_val[key.to_sym] = json_path_to_hash(json_path, value)
       end
     end
 

@@ -108,8 +108,8 @@ RSpec.describe JsonGenerator do
 
       json_path_fixtures = [
           {
-              path: '$.book',
-              value: 'David Hemming\'s Autobiography',
+              path: '$.',
+              value: nil,
               expecting: {}
           },
           {
@@ -121,12 +121,27 @@ RSpec.describe JsonGenerator do
               path: '$.store.book',
               value: 'David Hemming\'s Autobiography',
               expecting: {store: {book: 'David Hemming\'s Autobiography'}}
+          },
+          {
+              path: '$.staff[*]',
+              value: 'Bob',
+              expecting: {staff: ['Bob']}
+          },
+          {
+              path: '$.store.staff[*].name',
+              value: 'Bob',
+              expecting: {store: {staff: [{name: 'Bob'}]}}
+          },
+          {
+              path: '$.store.staff[*].scheduledDays',
+              value: %w[SAT SUN MON],
+              expecting: {store: {staff: [{scheduledDays: %w[SAT SUN MON]}]}}
           }
       ]
 
       json_path_fixtures.each do |fixture|
         result = json_generator.json_path_to_hash(fixture[:path], fixture[:value])
-        expect(result).to include(fixture[:expecting])
+        expect(result).to match(fixture[:expecting])
       end
 
     end
