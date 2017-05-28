@@ -63,6 +63,30 @@ class JsonGenerator
 
   end
 
+  def json_paths_to_hash(attributes)
+
+    new_hash = {}
+
+    attributes.each do |attribute|
+
+      if attribute[:path].match(/\[\d\]/).nil?
+        new_hash.deep_merge!(
+            json_path_to_hash(attribute[:path], attribute[:value]),
+            {merge_hash_arrays: true}
+        )
+      else
+
+        new_hash.deep_merge!(
+            json_path_to_hash(attribute[:path].gsub!(/\[\d\]/, '[*]'), attribute[:value])
+        )
+      end
+
+    end
+
+    new_hash
+
+  end
+
   private
   def remove_attributes(a_hash)
 

@@ -22,5 +22,13 @@ RSpec.describe 'string' do
     it 'performs a symbol conversion' do
       expect('book'.to_sym).to eql(:book)
     end
+
+    it 'performs a match' do
+      expect('employee[0]'.match(/\[\d\]/)).to_not eql(nil)
+    end
+
+    it 'performs a gsub' do
+      expect('employee[0].name'.gsub!(/\[\d\]/, '[*]')).to eql('employee[*].name')
+    end
   end
 end

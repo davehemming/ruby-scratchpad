@@ -104,7 +104,7 @@ RSpec.describe JsonGenerator do
 
   describe 'json_path_to_hash' do
 
-    it 'takes a valid json path and value and returns hash' do
+    it 'takes a valid json path and value and returns a hash' do
 
       json_path_fixtures = [
           {
@@ -146,4 +146,102 @@ RSpec.describe JsonGenerator do
 
     end
   end
+
+  describe 'json_paths_to_hash' do
+
+    it 'takes a multiple valid json path and value and returns a hash' do
+
+      json_path_fixtures = [
+          {
+              attributes: [
+                  {
+                      path: '$.book',
+                      value: 'David Hemming\'s Autobiography'
+                  },
+                  {
+                      path: '$.sales.total',
+                      value: 2000
+                  }
+              ],
+              expecting: {
+                  book: 'David Hemming\'s Autobiography',
+                  sales: {
+                      total: 2000
+                  }
+              }
+          },
+          {
+              attributes: [
+                  {
+                      path: '$.books[*]',
+                      value: 'David Hemming\'s Autobiography'
+                  },
+                  {
+                      path: '$.books[*]',
+                      value: 'The Complete Idiots Guide To Fighting Squirrels'
+                  }
+              ],
+              expecting: {
+                  books: ['David Hemming\'s Autobiography','The Complete Idiots Guide To Fighting Squirrels']
+              }
+          },
+          {
+              attributes: [
+                  {
+                      path: '$.employees[*].name',
+                      value: 'Fred'
+                  },
+                  {
+                      path: '$.employees[*].age',
+                      value: 22
+                  },
+                  {
+                      path: '$.employees[*].phone',
+                      value: '03 4444 3333'
+                  }
+              ],
+              expecting: {
+                  employees: [
+                      {
+                          name: 'Fred',
+                          age: 22,
+                          phone: '03 4444 3333'
+                      }
+                  ]
+              }
+          },
+          {
+              attributes: [
+                  {
+                      path: '$.employees[0].name',
+                      value: 'Fred'
+                  },
+                  {
+                      path: '$.employees[1].name',
+                      value: 'Bill'
+                  },
+                  {
+                      path: '$.employees[2].name',
+                      value: 'Jane'
+                  }
+              ],
+              expecting: {
+                  employees: [
+                      {name: 'Fred'},
+                      {name: 'Bill'},
+                      {name: 'Jane'}
+                  ]
+              }
+          }
+      ]
+
+      json_path_fixtures.each do |fixture|
+        result = json_generator.json_paths_to_hash(fixture[:attributes])
+        expect(result).to match(fixture[:expecting])
+      end
+
+    end
+
+  end
+
 end
